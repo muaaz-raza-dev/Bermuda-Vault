@@ -45,7 +45,7 @@ int operation_executer(unsigned char dek[crypto_secretbox_KEYBYTES]) {
                 break;
 
             case 6:
-                printf("Exiting vault... Goodbye!\n");
+                printf("\033[1;32mExiting vault... \033[1;31mGoodbye!\033[0m\n");
                 return 0;
 
             default:

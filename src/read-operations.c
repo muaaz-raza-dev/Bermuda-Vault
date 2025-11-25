@@ -10,8 +10,10 @@ int display_decrypted_record(unsigned char *dek,int total,FILE *fptr,int root_ta
     
     if (is_input_target_index){
         while (1){
-            printf("Enter record ID to reveal the password (-1 to exit reading ) : ");
+            printf("\033[1;36mEnter the record ID to display its password \033[0;31m(-1 to cancel)\033[0m: ");
             scanf("%d",&target_index);
+            while(getchar()!='\n');
+
             if(target_index==-1){
                 return 0;
             }
@@ -71,7 +73,11 @@ SearchCredsOutput search_record(char *query){
     if(total_found ) printf("---------------------------------------------------------\n");
     printf("Total found: %d\n", total_found);
 
-    SearchCredsOutput output = {total_found,found_indices,index};
+    SearchCredsOutput output ;
+    output.found_indices = found_indices;
+    output.total_found = total_found;
+    output.total_records = index;
+
     fclose(fptr);
     return output;
 }
@@ -80,8 +86,7 @@ SearchCredsOutput trigger_search(){
     SearchCredsOutput search_result;
     char query[64];
     while (1){
-        printf("Search record by username or website : ");
-        getchar() ;
+        printf("\033[1;36mSearch for a record by username or website\033[0m: ");
         fgets(query,sizeof(query),stdin);
         query[strcspn(query, "\n")] = '\0';
 
@@ -112,6 +117,7 @@ int read_vault(unsigned char *dek ){
 
 
     scanf("%d",&read_type);
+    while(getchar()!='\n');
     FILE *fptr =fopen(VAULT_PATH, "rb");
     if (fptr == NULL){  
         printf("No records found or error occured while opening file");
@@ -125,7 +131,6 @@ int read_vault(unsigned char *dek ){
         while (!total){
             char query[64];
             printf("Search by username or wesbite (Enter 0 to exit reading): ");
-            getchar();
             fgets(query,sizeof(query),stdin);
             query[strcspn(query, "\n")] = '\0';
             if(strlen(query) ==1 && query[0]=='0') return 0;
@@ -148,8 +153,9 @@ int read_vault(unsigned char *dek ){
     }
     else if(read_type==3){
         int target_index = 0;
-        printf("Enter ID of the record (-1 to exit reading): ");
+        printf("\033[1;36mEnter the record ID  \033[0;31m(-1 to cancel)\033[0m: ");
         scanf("%d",&target_index);
+        while(getchar()!='\n');
         if(target_index == -1){
             continue;
         }
@@ -161,5 +167,6 @@ int read_vault(unsigned char *dek ){
         
         return 0;
 }
+
 
 

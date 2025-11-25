@@ -15,14 +15,14 @@ while (1)
     int is_search = ask_yes_no("Search record by ID");
 
     if (is_search)  {
-        SearchCredsOutput search_result = trigger_search();
+         trigger_search();
     }
     
     FILE *fptr ;
     
     VaultEntry current_stored_record;
     while (1){
-        printf("Write ID of the record to update (-1 to exit editing) : ");
+        printf("\033[1;36mEnter the record ID to update \033[0;31m(-1 to exit editing)\033[0m: ");
         scanf("%d",&target_index);
         while (getchar()!='\n');
         if(target_index == -1){
@@ -58,7 +58,7 @@ while (1)
             perror("Unable to read the selected record (Invalid ID) \n");
             continue;
         }
-        int is_update_record = ask_yes_no("Are you sure you want to update this record");
+        int is_update_record = ask_yes_no("Are you sure to update ");
         
         if(is_update_record){
             break;
@@ -71,7 +71,7 @@ while (1)
 
     if(target_index !=0) fseek(fptr,(target_index-1 )* sizeof(VaultEntry) ,SEEK_SET);
     
-    VaultEntry current_updated_record;
+    VaultEntry current_updated_record = current_stored_record;
 
     
     bool change_username =true,change_password =true , change_wesbite =true;
@@ -79,7 +79,8 @@ while (1)
     
     while (1){
 
-        printf("Type the updated username (type 0 to remain unchanged) : ");
+        printf("\033[1;36mEnter the updated username \033[0;31m(0 to keep unchanged)\033[0m: ");
+
 
         fgets(current_updated_record.username,sizeof(current_updated_record.username),stdin);
         current_updated_record.username[strcspn(current_updated_record.username, "\n")] = '\0';
@@ -137,14 +138,14 @@ while (1)
         return 0;
     }
     
-
+    current_updated_record.is_deleted = false;
     if (fwrite(&current_updated_record,sizeof(current_updated_record),1,fptr)!=1){
         printf("Failed to write updated record to file\n");
         fclose(fptr);
         return 1;
     };    
     fclose(fptr);
-    printf("Record updated successfully");
+    printf("Record updated successfully\n");
 
     int is_continue = ask_yes_no("Update another record");
     if(is_continue != 1 ){break;}

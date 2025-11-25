@@ -110,8 +110,8 @@ int generate_dek(char *PASSWORD, unsigned char DEK[crypto_secretbox_KEYBYTES], b
         fptr = fopen("./data/user.dat", "wb+");
         if(fptr == NULL){
             printf("Error occured at creating user file\n ");
+            exit(1);
         }
-        exit(1);
     }
 
     unsigned char salt[SALT_LEN];

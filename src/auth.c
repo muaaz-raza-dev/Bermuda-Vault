@@ -30,7 +30,6 @@ int authenticate(unsigned char *DEK){
 
         while (1){
             printf("Password : ");
-            if (!is_first_try) getchar();
             fgets(cred.password,sizeof(cred.password),stdin);
             cred.password[strcspn(cred.password, "\n")] = '\0';
 
@@ -38,18 +37,16 @@ int authenticate(unsigned char *DEK){
             printf("\033[2K\r"); // clear that line and return to start
             fflush(stdout);
 
-            is_first_try =false;
-            int strength_status = check_password_strength(cred.password); 
+            check_password_strength(cred.password); 
             
-            if(strength_status <= 2) continue;
-            else{
-                int is_change_password = ask_yes_no("Change Password");
-                if (is_change_password ==1) continue;
-                else break;
+            int is_change_password = ask_yes_no("Change Password");
+            if (is_change_password ==1) continue;
+            else {
+                generate_dek(cred.password,DEK,false);
+                break;
+            }
             }
         }
-        generate_dek(cred.password,DEK,false);
-    }
     else {
         while (1){
             int decryption_status= 0;
@@ -80,16 +77,12 @@ int change_master_password(unsigned char *DEK){
     printf("Type new password : ");
     fgets(new_password,sizeof(new_password),stdin);
     new_password[strcspn(new_password, "\n")] = '\0';
-    int strength_status = check_password_strength(new_password); 
-    if (strength_status <= 2) continue;
-    else{       
-        while (1){
+    
+         check_password_strength(new_password); 
         int is_change_password = ask_yes_no("Change Password");
         if (is_change_password == 1) continue;
         else is_change_password_root=false;
         break;
-    }
-    }
     }
 
     generate_dek(new_password,DEK,true);

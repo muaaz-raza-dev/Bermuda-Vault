@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include "types.h"
 void print_record(VaultEntry record,int index,bool is_password,char *plain_password){
     printf("%-5d %-20s %-20s ", index, record.website,record.username,is_password);

@@ -33,7 +33,7 @@ int delete_record(unsigned char *dek){
 
         if(del_read_type ==1){
             char query[64];
-            printf("Search by username or wesbite (Enter 0 to exit searching) : ");
+            printf("\033[1;36mSearch by username or website \033[0;31m(0 to exit search)\033[0m: ");
             getchar();
             fgets(query,sizeof(query),stdin);
             query[strcspn(query, "\n")] = '\0';
@@ -43,8 +43,9 @@ int delete_record(unsigned char *dek){
         }
 
         while (1){
-            printf("Enter ID of the record (-1 to exit searching) : ");
+            printf("\033[1;36mEnter the record ID \033[0;31m(-1 to exit search)\033[0m: ");
             scanf("%d",&target_index);
+
             if(target_index == -1){
                 break;
             }
@@ -56,7 +57,7 @@ int delete_record(unsigned char *dek){
             if(display_decrypted_record_status != 0) continue;
             
             int del_current_record = 0;
-            printf("Are you sure you want to delete this record ? (1/0) : ");
+            printf("\033[1;33mAre you sure you want to delete this record? \033[0;31m(1 = Yes, 0 = No)\033[0m: ");
             scanf("%d",&del_current_record);
             if(!del_current_record) break;
             found_target_index = true;
@@ -116,8 +117,8 @@ int delete_record(unsigned char *dek){
     fclose(fptr);    
     fclose(del_log_fptr);    
 
-    printf("Record is deleted successfully !\n");
-    int is_continue = ask_yes_no("Delete another record");
+    printf("\033[1;32mRecord deleted successfully!\033[0m\n");
+    int is_continue = ask_yes_no("Do you want to delete another record");
     if(is_continue != 1 ){break;}
     }
 return 0;

@@ -7,14 +7,22 @@
 #define VAULT_DELETE_LOG_PATH "./data/del_log.dat"
 
 #ifdef _WIN32
-    #include <io.h>
+    #include <stdio.h>
+    #include <io.h>       // For _chsize and _fileno
+
+    // If _fileno is not declared, declare it explicitly
+    #ifndef FILENO
+        __declspec(dllimport) int __cdecl _fileno(FILE *stream);
+        #define FILENO _fileno
+    #endif
+
     #define TRUNCATE _chsize
-    #define FILENO _fileno
 #else
     #include <unistd.h>
-    #define TRUNCATE ftruncate
     #define FILENO fileno
+    #define TRUNCATE ftruncate
 #endif
+
 
 
 #define DEK_LEN crypto_aead_xchacha20poly1305_ietf_KEYBYTES
@@ -84,6 +92,7 @@ SearchCredsOutput search_record(char *query);
 SearchCredsOutput trigger_search();
 
 int update_record(unsigned char *dek );
+int write_record(unsigned char *dek);
 
 int read_vault(unsigned char *dek );
 int delete_record(unsigned char *dek);
